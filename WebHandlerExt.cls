@@ -22,20 +22,22 @@ block-level on error undo, throw.
 
 class WebHandlerExt inherits WebHandler: 
 
-	define public property Router as RequestRouter no-undo get. set.
+  define public property Router as RequestRouter no-undo get. set.
   
-	constructor public WebHandlerExt():
-	  this-object:Router = new RequestRouter().  
-	end.
+  constructor public WebHandlerExt():
+    this-object:Router = new RequestRouter().  
+  end.
 		
   method override protected integer HandleGet(request as IWebRequest):
     
     define variable response as IHttpResponse no-undo.
     define variable requestHandler as IWebRequestHandler no-undo.    
     define variable writer   as OpenEdge.Web.WebResponseWriter  no-undo.               
-    define variable resourceType as character no-undo.
-           
-    requestHandler = this-object:getHandler(string(request:GetContextValue('URI_FINAL_MATCH_GROUP'))).
+    define variable endpoint as character no-undo.
+    
+    
+    endpoint = getEndpoint(request).
+    requestHandler = this-object:getHandler(endpoint).
     response = requestHandler:HandleRequest(request).
     
     writer = new WebResponseWriter(response).
@@ -52,9 +54,11 @@ class WebHandlerExt inherits WebHandler:
     define variable response as OpenEdge.Net.HTTP.IHttpResponse no-undo.
     define variable requestHandler as IWebRequestHandler no-undo. 
     define variable writer as OpenEdge.Web.WebResponseWriter no-undo.
+    define variable endpoint as character no-undo.
     
     
-    requestHandler = this-object:getHandler(string(request:GetContextValue('URI_FINAL_MATCH_GROUP'))).
+    endpoint = getEndpoint(request).
+    requestHandler = this-object:getHandler(endpoint).
     response = requestHandler:HandleRequest(request).
 
     writer = new WebResponseWriter(response).
@@ -65,7 +69,12 @@ class WebHandlerExt inherits WebHandler:
     
   end method. 
 
-
+  
+  method private character getEndpoint(request as OpenEdge.Web.IWebRequest):
+    return string(request:GetContextValue('URI_FINAL_MATCH_GROUP')).
+  end method.
+  
+  
   method private IWebRequestHandler getHandler(path as character):    
     return this-object:Router:GetHandler(path).
   end method.
