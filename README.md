@@ -1,9 +1,9 @@
 # oewebtransport
 
-This is a minimalistic sample implementation for the PASOE web transport
+This is a minimalistic sample implementation for the PASOE web transport.
 
 ## handlers
-The `openedge.properties` file in `<pasoe-instance-dir>/conf` look like:
+The `openedge.properties` file in `<pasoe-instance-dir>/conf` looks like:
 
 ```
 # Transport properties for the WEB protocol
