@@ -9,7 +9,7 @@
     Notes       : 
   ----------------------------------------------------------------------*/
 
-using OpenEdge.Net.HTTP.StatusCodeEnum from propath.
+using OpenEdge.Net.HTTP.StatusCodeEnum.
 
 block-level on error undo, throw.
 

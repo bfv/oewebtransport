@@ -9,12 +9,11 @@
     Notes       : 
   ----------------------------------------------------------------------*/
 
-using Progress.Lang.*.
-using OpenEdge.Net.HTTP.StatusCodeEnum from propath.
-using OpenEdge.Net.HTTP.HttpHeader from propath.
-using OpenEdge.Web.IWebRequest from propath.
-using OpenEdge.Net.HTTP.IHttpResponse from propath.
-using OpenEdge.Core.String from propath.
+using OpenEdge.Net.HTTP.StatusCodeEnum.
+using OpenEdge.Net.HTTP.HttpHeader.
+using OpenEdge.Web.IWebRequest.
+using OpenEdge.Net.HTTP.IHttpResponse.
+using OpenEdge.Core.String.
 
 block-level on error undo, throw.
 

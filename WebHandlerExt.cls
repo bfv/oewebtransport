@@ -79,5 +79,4 @@ class WebHandlerExt inherits WebHandler:
     undo, throw new Progress.Lang.AppError("METHOD NOT IMPLEMENTED").
   end method.
   
-  
 end class    
