@@ -71,6 +71,7 @@ class RequestRouter:
   
   
   method private void fillRoutes():
+    this-object:AddRoute('/json', 'handlers.JsonSampleHandler').
     this-object:AddRoute('/dataviz', 'handlers.DatavizHandler').
     this-object:AddRoute('/info', 'handlers.InfoRequestHandler', 65534).
     this-object:AddRoute('/ping', 'handlers.PingRequestHandler', 65535).

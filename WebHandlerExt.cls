@@ -17,6 +17,9 @@ using OpenEdge.Web.WebRequest.
 using Progress.Json.ObjectModel.JsonObject.
 using OpenEdge.Net.HTTP.IHttpResponse.
 using OpenEdge.Web.IWebRequest.
+using OpenEdge.Web.WebResponse.
+using OpenEdge.Core.String.
+using Progress.Lang.Error.
 
 block-level on error undo, throw.
 
@@ -32,7 +35,7 @@ class WebHandlerExt inherits WebHandler:
     
     define variable response as IHttpResponse no-undo.
     define variable requestHandler as IWebRequestHandler no-undo.    
-    define variable writer   as OpenEdge.Web.WebResponseWriter  no-undo.               
+    define variable writer as OpenEdge.Web.WebResponseWriter  no-undo.               
     define variable endpoint as character no-undo.
     
     
@@ -56,11 +59,22 @@ class WebHandlerExt inherits WebHandler:
     define variable writer as OpenEdge.Web.WebResponseWriter no-undo.
     define variable endpoint as character no-undo.
     
+    do on error undo, throw:
+      
+      endpoint = getEndpoint(request).
+      requestHandler = this-object:getHandler(endpoint).
+      response = requestHandler:HandleRequest(request).
     
-    endpoint = getEndpoint(request).
-    requestHandler = this-object:getHandler(endpoint).
-    response = requestHandler:HandleRequest(request).
-
+      catch err1 as Progress.Lang.Error :
+        response = new WebResponse().
+        response:StatusCode = integer(StatusCodeEnum:InternalServerError).
+        response:StatusReason = err1:GetMessage(1).
+        response:Entity = generateErrorString(err1, endpoint).
+        response:ContentType = 'text/plain'.
+      end catch.
+      
+    end.
+    
     writer = new WebResponseWriter(response).
     writer:Open().
     writer:Close().
@@ -87,5 +101,24 @@ class WebHandlerExt inherits WebHandler:
   method override protected integer HandleNotImplemented(webRequest as OpenEdge.Web.IWebRequest ):
     undo, throw new Progress.Lang.AppError("METHOD NOT IMPLEMENTED").
   end method.
+  
+  method private String generateErrorString(err1 as Error, endpoint as character):
+    
+    define variable errorString as String no-undo.
+    
+    errorString = new String(
+      substitute(
+        'Internal Server Error (500) for POST to ~'&1~': &2~n~nStacktrace:~n&3', 
+        endpoint, 
+        err1:GetMessage(1),
+        err1:CallStack
+      )
+    ).
+    
+    return errorString.
+    
+  end method.
+  
+  
   
 end class    
