@@ -1,0 +1,65 @@
+<project name="build" default="build" basedir=".">
+  
+  <taskdef resource="PCT.properties" />
+  <property environment="env"/>
+  
+  <target name="build" depends="initvars,init">
+    <antcall target="compile" />
+      <antcall target="package" />
+      <antcall target="createdist" />
+  </target>
+  
+  <target name="initvars">
+    <property name="srcdir" location="." />
+    <property name="builddir" location="./../build" />
+    <property name="deploydir" location="${builddir}/../deploy" />
+    <property name="distdir" location="${builddir}/../dist" />
+    
+    <echo message="srcdir:        ${srcdir}" />    
+    <echo message="builddir:      ${builddir}" />
+    <echo message="deploydir:     ${deploydir}" />
+    <echo message="distdir        ${distdir}" />
+    <echo message="DLC:           ${DLC}" />
+  </target>
+  
+  <target name="init">
+    <delete dir="${builddir}" failonerror="false" />
+    <mkdir dir="${builddir}" />
+    <delete dir="${deploydir}" failonerror="false" />
+    <mkdir dir="${deploydir}" />
+    <delete dir="${distdir}" failonerror="false" />
+    <mkdir dir="${distdir}" />
+  </target>
+  
+  <target name="compile">
+    <PCTCompileExt destdir="${builddir}" dlchome="${DLC}">
+    <propath>
+      <pathelement path="${srcdir}" />
+	  <pathelement path="${DLC}/tty/netlib/OpenEdge.Net.pl" />
+    </propath>
+      <fileset dir="${srcdir}">
+        <include name="**/*.p" />
+        <include name="**/*.w" />
+        <include name="**/*.cls" />
+      </fileset>
+    </PCTCompileExt>
+  </target>
+  
+  <target name="package">
+    
+    <PCTLibrary destfile="${deploydir}/oewebtransport.pl" dlchome="${DLC}">
+      <fileset dir="${builddir}">
+        <include name="**/*.r" />
+        <exclude name="" />
+       </fileset>
+    </PCTLibrary>
+    
+    <copy file="${DLC}/version" tofile="${deploydir}/oeversion.txt" />
+    
+  </target>
+  
+  <target name="createdist">
+    <zip destfile="${distdir}/oewebtransport.zip" basedir="${deploydir}" />
+  </target>
+  
+</project>
