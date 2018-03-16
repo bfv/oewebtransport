@@ -11,7 +11,7 @@
   
   <target name="initvars">
     <property name="srcdir" location="." />
-    <property name="builddir" location="./../build" />
+    <property name="builddir" location="./build" />
     <property name="deploydir" location="${builddir}/../deploy" />
     <property name="distdir" location="${builddir}/../dist" />
     
